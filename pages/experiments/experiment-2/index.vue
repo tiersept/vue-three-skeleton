@@ -1,10 +1,10 @@
 <template>
-		<section class="container">
-			<!-- <h1 class="__title">NEW FORTHCOMING</h1> -->
-			<div class="__canvas">
+        <section class="container">
+            <!-- <h1 class="__title">NEW FORTHCOMING</h1> -->
+            <div class="__canvas">
 
-			</div>
-		</section>
+            </div>
+        </section>
 
 </template>
 
@@ -21,7 +21,6 @@ export default {
 			geometry: null,
 			material: null,
 			meshCube: null
-				
 		}
 	},
 
@@ -30,7 +29,7 @@ export default {
 	},
 
 	created() {
-		
+			
 	},
 
 	mounted() {
@@ -40,7 +39,7 @@ export default {
 			this.initThree();
 			this.setupLights();
 			this.addCube();
-			this.addSphere();
+			this.addSpheres();
 			this.animate();
 		}, 1000);
 
@@ -79,16 +78,16 @@ export default {
 		addCube() {
 			let geometry = new THREE.BoxGeometry( 0.6, 0.6, 0.6 );
 			let material = new THREE.MeshStandardMaterial({
-				roughness: 0.8,
-				color: new THREE.Color(0x00c500),
-				wireframe: true,
+					roughness: 0.8,
+					color: new THREE.Color(0x00c500),
+					wireframe: true,
 			});
 
 			this.meshCube = new THREE.Mesh( geometry, material );
 			this.scene.add( this.meshCube );			
 		},
 
-		addSphere() {
+		addSphere(i, x, y, z) {
 			let geometry = new THREE.SphereGeometry( .1, 10, 10 );
 			let material = new THREE.MeshStandardMaterial({
 				roughness: 0.8,
@@ -96,8 +95,28 @@ export default {
 				wireframe: true,
 			});
 
-			this.meshSphere = new THREE.Mesh( geometry, material );
-			this.scene.add( this.meshSphere );			
+			let meshSphere = new THREE.Mesh( geometry, material );
+			meshSphere.position.set(x, y, z);
+			this.scene.add( meshSphere );
+
+		},
+
+		addSpheres() {
+			// Positioning on a grid , then in random z space
+			const count = 50;
+			let cols = 0;
+			let y = 2;
+			for (let i = 1; i < count; i++) {
+				cols++;
+				let n = 0.5 * (cols * 1.25);
+				let x = -2.8 + n;
+				if(cols % 10 === 0 ) {
+					cols = 0;
+					y--
+				}
+				let z = -5 * Math.random();
+				this.addSphere(i, x, y, z);
+			}
 		},
 
 		animate() {
@@ -125,28 +144,28 @@ export default {
 
 <style lang="stylus">
 .container 
-	overflow hidden
-	margin 0 auto
-	max-height 100vh
-	display flex
-	justify-content center
-	align-items center
-	text-align center
+    overflow hidden
+    margin 0 auto
+    max-height 100vh
+    display flex
+    justify-content center
+    align-items center
+    text-align center
 
 .__canvas
-	position absolute
-	width 100%
-	height 100vh
-	top 0
-	left 0
-	z-index -1
+    position absolute
+    width 100%
+    height 100vh
+    top 0
+    left 0
+    z-index -1
 
 .__title
-	position relative
-	margin-top 35%
-	left 12%
-	text-align left
-	color #00ff8d
-	font-size 18rem
-	z-index 999
+    position relative
+    margin-top 35%
+    left 12%
+    text-align left
+    color #00ff8d
+    font-size 18rem
+    z-index 999
 </style>
